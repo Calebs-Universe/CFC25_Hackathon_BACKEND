@@ -36,7 +36,7 @@ const USERS_API_ENDPOINTS = {
 
         let requiredFeilds  = ["name", "email", "isOAuth"];
 
-        let auxiliaryFeilds = ["password", "confirm_password"];
+        let auxiliaryFeilds = ["password"];
 
         requiredFeilds.forEach((feild) => { 
 
@@ -52,20 +52,14 @@ const USERS_API_ENDPOINTS = {
                     if (!request.body[feild]) { response.status(400).json({ message: `The '${ feild }' feild is required !` }); };
                 });
 
-                if (request.body.password !== request.body.confirm_password) {
+                let hashed_password = await bcrypt.hash(request.body.password, 12);
 
-                    response.status(400).json({ message: `Password and confirm password should be equal !` });
+                let user = new User({ name: request.body.name, email: request.body.email, passwrod: hashed_password, isOAuth: false });
 
-                } else {
+                await user.save();
 
-                    let hashed_password = await bcrypt.hash(request.body.password, 12);
-
-                    let user = new User({ name: request.body.name, email: request.body.email, passwrod: hashed_password, isOAuth: false });
-
-                    await user.save();
-
-                    response.status(200).json({ message: "User Created succesfully !", user: { ...user._doc } });
-                }
+                response.status(200).json({ message: "User Created succesfully !", user: { ...user._doc } });
+                
             } else if ( request.body.isOAuth === "true" ) {
 
                 let user = new User({ name: request.body.name, email: request.body.email, isOAuth: true });

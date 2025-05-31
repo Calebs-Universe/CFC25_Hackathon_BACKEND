@@ -38,7 +38,7 @@ class Server {
         this.Application.use(helmet());
         this.Application.use(bodyParser.json());
         // this.Application.use(ajVerify);
-        this.Application.use('/', (req, res) => {res.status(200).json({message: "Working"})});
+        // this.Application.use('/', (req, res) => {res.status(200).json({message: "Working"})});
 
         this.MiddleWares.forEach((middleware) => { 
             
