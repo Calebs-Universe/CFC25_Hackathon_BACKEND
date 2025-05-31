@@ -4,6 +4,8 @@ import { Logs_palette } from "../palette/index.js";
 
 import connectDatabase from "../configurations/database.js";
 
+import ajVerify from "../middlewares/aj.middleware.js";
+
 
 // Importing inbuilt middlewares :
 
@@ -14,7 +16,8 @@ import bodyParser from "body-parser";
 // Importing custom endpoints :
 
 import USERS_ROUTE from "../routes/user.routes.js";
-import nkwaRouter from "../routes/nkwa.routes.js";
+import nkwaRouter  from "../routes/nkwa.routes.js";
+import SERVICE_ROUTES from "../routes/services.routes.js";
 
 // Definition of the server class :
 
@@ -26,7 +29,7 @@ class Server {
         this.DB_URI = databaseURI;
 
         this.Application = express();
-        this.MiddleWares = [ USERS_ROUTE, nkwaRouter ]; 
+        this.MiddleWares = [ USERS_ROUTE, SERVICE_ROUTES, nkwaRouter ]; 
     }
 
     start () {
@@ -34,6 +37,8 @@ class Server {
         this.Application.use(cors());
         this.Application.use(helmet());
         this.Application.use(bodyParser.json());
+        // this.Application.use(ajVerify);
+        this.Application.use('/', (req, res) => {res.status(200).json({message: "Working"})});
 
         this.MiddleWares.forEach((middleware) => { 
             

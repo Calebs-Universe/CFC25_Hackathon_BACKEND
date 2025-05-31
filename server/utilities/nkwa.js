@@ -5,8 +5,7 @@ dotenv.config();
 
 console.log(process.env.NKWA_API_KEY)
 const payObj = new Pay({
-    apiKeyAuth: process.env.NKWA_API_KEY,
-    serverURL: "https://api.sandbox.pay.mynkwa.com"
+    apiKeyAuth: process.env.NKWA_API_KEY
 });
 
 export default payObj
