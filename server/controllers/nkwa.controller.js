@@ -1,8 +1,6 @@
 import payObj from "../utilities/nkwa.js";
 import dotenv from "dotenv";
 
-dotenv.config();
-
 export const payMoney = async (req, res, next) => {
     try {
         console.log(req.params.number);
@@ -44,6 +42,7 @@ const initiatePay = async (amount, number) => {
 }
 
 export const processPay = async (req, res, next) => {
+    console.log("wooow");
     try {
         const { amount, phoneNumber } = req.body;
 
