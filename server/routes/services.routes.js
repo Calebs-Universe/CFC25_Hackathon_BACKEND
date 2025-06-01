@@ -10,7 +10,7 @@ import { isAuth } from "../middlewares/auth.middleware.js";
 const SERVICE_ROUTES = Router();
 
 SERVICE_ROUTES
-    .use(isAuth)
+    .use('/services', isAuth)
 
     .get   ("/services",     SERVICES_API_ENDPOINTS.GET_SERVICE)
     .delete("/services/:id", SERVICES_API_ENDPOINTS.DELETE_SERVICE)

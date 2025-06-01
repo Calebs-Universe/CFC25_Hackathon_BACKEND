@@ -46,8 +46,8 @@ const SERVICES_API_ENDPOINTS = {
             let service = new Service({ 
 
                 name:        request.body.name,
-                image:       results.secure_url,
-                website:     request.body.website,
+                image:       results.secure_url   ? results.secure_url : "",
+                website:     request.body.website ? request.body.website : "",
                 category:    request.body.category,
                 description: description_json,
 

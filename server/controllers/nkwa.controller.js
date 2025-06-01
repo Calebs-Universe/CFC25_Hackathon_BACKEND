@@ -22,6 +22,7 @@ export const payMoney = async (req, res, next) => {
 
 const initiatePay = async (amount, number) => {
     try {
+        console.log('Initiating payment');
         const id = await fetch(`${process.env.NKWA_URL}/collect`, {
             method: 'POST',
             headers: {
