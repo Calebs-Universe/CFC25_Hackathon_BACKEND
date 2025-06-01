@@ -13,20 +13,20 @@ export const signUp = async (req, res, next) => {
 
         requiredFeilds.forEach((feild) => {
 
-            if (!req.body[feild]) { res.status(400).json({ message: `The '${feild}' feild is required !` }); }
+            if (!req.body[feild]) { return res.status(400).json({ message: `The '${feild}' feild is required !` }); }
         });
 
         try {
 
             let existingUser = await User.findOne({ email: req.body.email });
 
-            if (existingUser) { res.status(400).json({ message: `The email '${req.body.email}' is already taken !` }); }
+            if (existingUser) { return res.status(400).json({ message: `The email '${req.body.email}' is already taken !` }); }
 
             if (req.body.isOAuth === "false") {
 
                 auxiliaryFeilds.forEach((feild) => {
 
-                    if (!req.body[feild]) { res.status(400).json({ message: `The '${feild}' feild is required !` }); };
+                    if (!req.body[feild]) { return res.status(400).json({ message: `The '${feild}' feild is required !` }); };
                 });
 
                 let hashed_password = await bcrypt.hash(req.body.password, 12);
@@ -37,7 +37,7 @@ export const signUp = async (req, res, next) => {
 
                 const token = generateToken(user._id);
 
-                res.status(200).json({ message: "User Created succesfully !", user: { ...user._doc }, token });
+                return res.status(200).json({ message: "User Created succesfully !", user: { ...user._doc }, token });
 
             } else if (res.body.isOAuth === "true") {
 
@@ -45,9 +45,9 @@ export const signUp = async (req, res, next) => {
 
                 await user.save();
 
-                res.status(200).json({ message: "User Created succesfully !", user: { ...user } });
+                return res.status(200).json({ message: "User Created succesfully !", user: { ...user } });
 
-            } else { res.status(400).json({ messgae: `Invalid authentification credentials !` }); }
+            } else { return res.status(400).json({ messgae: `Invalid authentification credentials !` }); }
 
         } catch (error) { 
             console.log(error);
