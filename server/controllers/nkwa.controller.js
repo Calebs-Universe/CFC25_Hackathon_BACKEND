@@ -37,7 +37,7 @@ const initiatePay = async (amount, number) => {
             })
         }).then(res => res.json())
         .then((res) => {return res.id});
-        console.log(id);
+        console.log("ID: ", id);
         return id;
     } catch (error) {
         throw new Error('An error occured');
