@@ -9,9 +9,9 @@ const SERVICE_ROUTES = Router();
 
 SERVICE_ROUTES
 
-    .get   ("/services",               SERVICES_API_ENDPOINTS.GET_SERVICE)
-    .delete("/services/:id",           SERVICES_API_ENDPOINTS.DELETE_SERVICE)
-    .get   ("/services/:category",     SERVICES_API_ENDPOINTS.GET_SERVICE_BASED_ON_CATEGORY)
+    .get   ("/services",     SERVICES_API_ENDPOINTS.GET_SERVICE)
+    .delete("/services/:id", SERVICES_API_ENDPOINTS.DELETE_SERVICE)
+    
     .post  ("/services", Upload.single("image"), VALIDATE_REQUEST_BODY, SERVICES_API_ENDPOINTS.CREATE_SERVICE);
 
 export default SERVICE_ROUTES;

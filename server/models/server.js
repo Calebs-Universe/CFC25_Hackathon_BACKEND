@@ -3,6 +3,7 @@ import express from "express";
 import { Logs_palette } from "../palette/index.js";
 
 import connectDatabase from "../configurations/database.js";
+import { ConfigureCloudinary } from "../configurations/cloudinary.js";
 
 import ajVerify from "../middlewares/aj.middleware.js";
 
@@ -17,6 +18,7 @@ import bodyParser from "body-parser";
 
 import USERS_ROUTE from "../routes/user.routes.js";
 import nkwaRouter  from "../routes/nkwa.routes.js";
+import authRouter from "../routes/auth.routes.js"
 import SERVICE_ROUTES from "../routes/services.routes.js";
 
 // Definition of the server class :
@@ -29,7 +31,7 @@ class Server {
         this.DB_URI = databaseURI;
 
         this.Application = express();
-        this.MiddleWares = [ USERS_ROUTE, SERVICE_ROUTES, nkwaRouter ]; 
+        this.MiddleWares = [ authRouter, USERS_ROUTE, SERVICE_ROUTES, nkwaRouter ]; 
     }
 
     start () {
@@ -50,6 +52,8 @@ class Server {
             console.log(`\n${ Logs_palette.caption("[_server]") } Server started at port ${ Logs_palette.warning(this.Port).toString() }, live at ${ Logs_palette.link(`http://localhost:${ this.Port }`) }.`);
 
             connectDatabase(this.DB_URI);
+
+            ConfigureCloudinary();
         });
     }
 };

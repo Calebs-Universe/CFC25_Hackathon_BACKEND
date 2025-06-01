@@ -1,4 +1,9 @@
+import fs   from "fs";
+import path from "path";
+
 import Service from "../models/services.model.js";
+
+import { UploadToCLoudinary } from "../configurations/cloudinary.js";
 
 const SERVICES_API_ENDPOINTS = {
 
@@ -30,26 +35,38 @@ const SERVICES_API_ENDPOINTS = {
 
         try {
 
-            console.log(request.file);
+            let results = await UploadToCLoudinary(`${ request.file.destination }${ request.file.filename }`);
+
+            // console.log(result);
             
             let service = new Service({ 
 
                 name:        request.body.name,
-                image:       request.body.image,
+                image:       results.secure_url,
                 website:     request.body.website,
                 category:    request.body.category,
                 description: request.body.description,
 
             });
 
-            // await service.save();
+            fs.rm(path.join(__dirname, `${ request.file.destination }${ request.file.filename }`));
+
+            await service.save();
 
             response.status(200).json({ message: "Service added succesfully !", service: { ...service._doc } });
 
         } catch (error) { response.status(500).json({ message: `Uncaught Exception | ${ error } !` }); }
     },
-    DELETE_SERVICE: async (request, response) => {},
-    GET_SERVICE_BASED_ON_CATEGORY: async (request, response) => {},
+
+    DELETE_SERVICE: async (request, response) => {
+
+        if (!request.params.id) { response.status(400).json({ message: "No Post id provided !" }); }
+
+        await Service.findByIdAndDelete(request.params.id)
+
+            .then ((service) => { response.status(200).json({ message: `User ${ request.params.id } has been deleted successfully` }); })
+            .catch((error)   => { response.status(500).json({ messgae: `Uncaught Exception | ${ error } !` }); });
+    }
 };
 
 export default SERVICES_API_ENDPOINTS;

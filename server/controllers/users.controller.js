@@ -27,7 +27,7 @@ const USERS_API_ENDPOINTS = {
 
             let result = await User.find();
 
-            response.status(200).json({ message: "Users fetched successfully !", data: [...result] });
+            response.status(200).json({ message: "Users fetched sucfcessfully !", data: [...result] });
 
         } catch (error) { response.status(500).json({ messgae: `Uncaught Exception | ${ error } !` }); }
     },
@@ -44,6 +44,10 @@ const USERS_API_ENDPOINTS = {
          });
 
          try {
+
+            let existingUser = await User.findOne({ email: req.body.email });
+
+            if (existingUser) { response.status(400).json({ message: `The email '${ req.body.email }' is already taken !` }); }
 
             if (request.body.isOAuth === "false") {
 
@@ -94,7 +98,6 @@ const USERS_API_ENDPOINTS = {
 
         if (!id) { response.status(400).json({ message: `The user id is required'` }); };
 
-            
         await User.findByIdAndDelete(id)
 
             .then ((users) => { response.status(200).json({ message: `User ${ id } has been deleted successfully` }); })

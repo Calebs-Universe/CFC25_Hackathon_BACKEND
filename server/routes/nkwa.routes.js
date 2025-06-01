@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { payMoney } from "../controllers/nkwa.controller.js";
+import { payMoney, processPay } from "../controllers/nkwa.controller.js";
 
 const nkwaRouter = Router();
 
-nkwaRouter.get('/pay/:number', payMoney);
+nkwaRouter.post('/pay', processPay);
 
 export default nkwaRouter;

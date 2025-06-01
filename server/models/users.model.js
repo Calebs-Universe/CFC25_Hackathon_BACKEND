@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const constrains = {
 
     name:     { type: String, min: 3, required: true },
-    email:    { type: String,  required: true  },
+    email:    { type: String,  required: true, unique: true },
     isOAuth:  { type: Boolean, required: true  },
     password: { type: String,  required: false }
 };

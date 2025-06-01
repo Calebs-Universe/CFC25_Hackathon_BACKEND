@@ -14,7 +14,11 @@ export async function ConfigureCloudinary() {
 
 export async function UploadToCLoudinary(file) {
 
-    const response = await v2.uploader.upload(file, { resource_type: "auto" });
+    try { 
+        
+        const response = await v2.uploader.upload(file, { resource_type: "auto" });
 
-    return response;
+        return response;
+
+    } catch (error) { return error; }
 };

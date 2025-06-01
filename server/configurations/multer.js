@@ -6,6 +6,8 @@ const storage = multer.diskStorage({
     destination: function (request, file, callback) { callback(null, "../uploads/"); }
 });
 
-const Upload = multer({ storage: storage });
+// const Upload = multer({ storage: storage });
+
+const Upload = multer({ dest: '../uploads/' });
 
 export default Upload;
