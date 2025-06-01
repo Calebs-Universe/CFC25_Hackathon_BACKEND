@@ -1,6 +1,7 @@
 import payObj from "../utilities/nkwa.js";
 import dotenv from "dotenv";
 
+
 dotenv.config();
 
 export const payMoney = async (req, res, next) => {
