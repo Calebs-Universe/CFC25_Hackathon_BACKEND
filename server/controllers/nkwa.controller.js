@@ -1,5 +1,6 @@
 import payObj from "../utilities/nkwa.js";
 import dotenv from "dotenv";
+import axios from "axios";
 
 export const payMoney = async (req, res, next) => {
     try {

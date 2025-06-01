@@ -1,5 +1,5 @@
-import fs   from "fs";
-import path from "path";
+import { unlink } from "node:fs";
+import path, { dirname } from "path";
 
 import Service from "../models/services.model.js";
 
@@ -17,9 +17,9 @@ const SERVICES_API_ENDPOINTS = {
 
         } catch (error) { response.status(500).json({ message: `Uncaught Exception | ${ error } !` }); }
     },
-
+    
     CREATE_SERVICE: async (request, response) => {
-
+        
         let requiredFeilds       = ["name", "category", "website", "description"];
         let requiredDescriptions = ["en", "fr", "pid"];
 
@@ -28,9 +28,13 @@ const SERVICES_API_ENDPOINTS = {
             if (!request.body[feild]) { response.status(400).json({ message: `The '${ feild } is required !'` }); };
         });
         
+        let description_json = JSON.parse(request.body.description);
+
+        console.log(description_json);
+
         requiredDescriptions.forEach((description) => {
 
-            if (!request.body.description[description]) { response.status(400).json({ message: `The '${ description }' description is required !` }); }
+            if (!description_json[description]) { response.status(400).json({ message: `The '${ description }' description is required !` }); }
         });
 
         try {
@@ -45,11 +49,11 @@ const SERVICES_API_ENDPOINTS = {
                 image:       results.secure_url,
                 website:     request.body.website,
                 category:    request.body.category,
-                description: request.body.description,
+                description: description_json,
 
             });
 
-            fs.rm(path.join(__dirname, `${ request.file.destination }${ request.file.filename }`));
+            // unlink(dirname(request.file.filename), (error) => { if (error) console.log(error); });
 
             await service.save();
 
@@ -70,3 +74,5 @@ const SERVICES_API_ENDPOINTS = {
 };
 
 export default SERVICES_API_ENDPOINTS;
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4M2JmOTkyMzczNTQ5YTg4NzM3MjVjNSIsImlhdCI6MTc0ODc2MDk3OCwiZXhwIjoxNzQ4ODQ3Mzc4fQ.Vd8t9dRJ71At7X8XbOWxjnEXiemhwVXoTfsP2YBfyZQ

@@ -1,6 +1,6 @@
 import User from "../models/users.model.js"
 import mongoose from 'mongoose';
-import { generateToken } from '../utilities/auth.js'
+import { generateToken, comparePassword } from '../utilities/auth.js'
 import bcrypt from "bcryptjs";
 
 export const signUp = async (req, res, next) => {
@@ -31,7 +31,7 @@ export const signUp = async (req, res, next) => {
 
                 let hashed_password = await bcrypt.hash(req.body.password, 12);
 
-                let user = new User({ name: req.body.name, email: req.body.email, passwrod: hashed_password, isOAuth: false });
+                let user = new User({ name: req.body.name, email: req.body.email, password: hashed_password, isOAuth: false });
 
                 await user.save();
 
@@ -51,7 +51,7 @@ export const signUp = async (req, res, next) => {
 
         } catch (error) { 
             console.log(error);
-            res.status(500).json({ messgae: `Uncaught Exception | ${error} !` }); 
+            return res.status(500).json({ messgae: `Uncaught Exception | ${error} !` }); 
         }
     } catch (error) {
         session.abortTransaction();
@@ -61,5 +61,37 @@ export const signUp = async (req, res, next) => {
             message: "An error occured",
             error
         });
+    }
+}
+
+
+export const signIn = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email or password not provided", success: false});
+        }
+
+        const user = await User.findOne({ email: email });
+
+        console.log(user);
+
+        if (!user) {
+            return res.status(400).json({ message: "Invalid credentials", success: false});
+        }
+
+        const isMatch = await comparePassword(password, user.password);
+
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials", success: false });
+        }
+
+        const token = generateToken(user._id);
+
+        return res.status(200).json({ user, token})
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal Server Error", success: false });
     }
 }
