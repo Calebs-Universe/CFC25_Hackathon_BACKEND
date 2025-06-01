@@ -36,7 +36,7 @@ const initiatePay = async (amount, number) => {
                 phoneNumber: number
             })
         }).then(res => res.json())
-        .then((res) => {return res.id});
+        .then((res) => {return res});
         console.log("ID: ", id);
         return id;
     } catch (error) {
